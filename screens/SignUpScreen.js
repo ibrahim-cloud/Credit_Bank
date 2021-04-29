@@ -10,9 +10,135 @@ import {
 } from "react-native";
 import ButtonShared from "../components/shared/ButtonShared";
 import firebase from "../firebase";
-const db = firebase.firestore();
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const db = firebase.firestore();
+
+function SignUpScreen(props) {
+
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
+  const [phone, setphone] = useState("");
+  const [email, setemail] = useState("");
+  const [isSelected, setSelection] = useState(false);
+  async function signUp() {
+    try {
+      if (db) {
+        if (firstName === "" || lastName === "" || phone === "" || email === "") {
+          Alert.alert("Please ", "Enter The Infos");
+        } else {
+          db.collection("clients").add({
+            firstName: firstName,
+            lastName: lastName,
+            phone: phone,
+            email: email,
+          });
+if (firstName){
+  AsyncStorage.setItem('firstName', firstName)
+  AsyncStorage.setItem('lastName', lastName)
+  AsyncStorage.setItem('phone', phone)
+  AsyncStorage.setItem('email', email)
+}
+
+          props.navigation.navigate("Credit"); 
+        }
+        
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  // const getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('validation')
+  //     if(value){
+  //       console.log('data is exists')
+  //     }
+  //     console.log(value)
+  //     if(value !== null) {
+  //    console.log('====================================');
+  //    console.log("data is added");
+  //    console.log('====================================');
+  //     }
+  //   } catch(e) {
+  //     // error reading value
+  //   }
+  // }
+
+  useEffect(async () => {
+    await getData()
+  }, [])
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.row}>
+        <Image style={styles.image} source={require("../assets/coordonnee.jpg")} />
+        <View style={styles.topText}>
+          <Text style={styles.Heading}>MES COORDONNÉES</Text>
+          <Text>
+            Renseigner les champs ci-dessous et passer à l'étape suivante !
+          </Text>
+        </View>
+      </View>
+      <TextInput
+        style={styles.input}
+        placeholder={"Nom ..."}
+
+        value={firstName}
+        onChangeText={
+              
+          firstName =>{ setfirstName(firstName)
+            
+            }
+            
+          }
+      />
+      <TextInput
+        style={styles.input}
+        placeholder={"Prénom ..."}
+       
+        value={lastName}
+        onChangeText={
+              
+          lastName =>{ setlastName(lastName)
+            
+            }
+            
+          }
+      />
+      <TextInput
+        style={styles.input}
+        placeholder={"Tél ..."}
+        value={phone}
+
+       
+        onChangeText={
+              
+          phone =>{ setphone(phone)
+            
+            }
+            
+          }
+      />
+      <TextInput
+        style={styles.input}
+        placeholder={"Email..."}
+        value={email}      
+         onChangeText={email =>{ setemail(email)}
+    
+  }
+
+      />
+      <ButtonShared
+        text="SIMULER"
+        onPress={() => {
+          signUp();
+        }}
+      />
+    </ScrollView>
+  );
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -50,112 +176,5 @@ const styles = StyleSheet.create({
 
   }
 });
-
-
-
-function SignUpScreen(props) {
-
-  const [firstName, onChangefirstName] = React.useState("");
-  const [lastName, onChangelastName] = React.useState("");
-  const [phone, onChangePhone] = React.useState("");
-  const [email, onChangeEmail] = React.useState("");
-  const [isSelected, setSelection] = React.useState(false);
-  async function signUp() {
-    // console.log(firstName);
-    // console.log(lastName);
-    // console.log(phone);
-    // console.log(firstName);
-    try {
-      if (db) {
-        if (firstName === "" || lastName === "" || phone === "" || email === "") {
-          Alert.alert("Please ", "Enter The Infos");
-        } else {
-          db.collection("clients").add({
-            firstName: firstName,
-            lastName: lastName,
-            phone: phone,
-            email: email,
-          });
-
-          try {
-            const data =  await AsyncStorage.setItem('validation', JSON.stringify({firstName, lastName, phone, email}))
-            
-          } catch (e) {
-            // saving error
-          }
-
-          props.navigation.navigate("Credit"); 
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('validation')
-      if(value){
-        console.log('data is exists')
-      }
-      console.log(value)
-      if(value !== null) {
-     console.log('====================================');
-     console.log("data is added");
-     console.log('====================================');
-      }
-    } catch(e) {
-      // error reading value
-    }
-  }
-
-  useEffect(async () => {
-    await getData()
-  }, [])
-  return (
-    <ScrollView style={styles.container}>
-      <View style={styles.row}>
-        <Image style={styles.image} source={require("../assets/coordonnee.jpg")} />
-        <View style={styles.topText}>
-          <Text style={styles.Heading}>MES COORDONNÉES</Text>
-          <Text>
-            Renseigner les champs ci-dessous et passer à l'étape suivante !
-          </Text>
-        </View>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder={"Nom ..."}
-        onChangeText={onChangefirstName}
-        value={firstName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={"Prénom ..."}
-        onChangeText={onChangelastName}
-        value={lastName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={"Tél ..."}
-        onChangeText={onChangePhone}
-        value={phone}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={"Email..."}
-        onChangeText={onChangeEmail}
-        value={email}
-      />
-      <ButtonShared
-        text="SIMULER"
-        onPress={() => {
-          signUp();
-        }}
-      />
-    </ScrollView>
-  );
-}
 
 export default SignUpScreen;

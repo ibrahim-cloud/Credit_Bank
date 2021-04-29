@@ -55,39 +55,80 @@ const styles = StyleSheet.create({
 
 function SignUpScreen(props) {
 
-  const [firstName, onChangefirstName] = React.useState("");
-  const [lastName, onChangelastName] = React.useState("");
-  const [phone, onChangePhone] = React.useState("");
-  const [email, onChangeEmail] = React.useState("");
-  const [isSelected, setSelection] = React.useState(false);
 
 
-  const [value, setValue] = useState("");
-  const getData = async () => {
-    try {
-      const data = await AsyncStorage.getItem('validation')
-      const data1 = JSON.parse(data);
-      setValue(data1)
-      if(value){
-        console.log('data is exists')
-      }
-      console.log(value)
-      if(value !== null) {
-        console.log('====================================');
-        console.log("data is added");
-        console.log('====================================');
-      }
-    } catch(e) {
-      // error reading value
-    }
-  }
+
+  const [value, setvalue] = useState('');
+  const [value1, setvalue1] = useState('');
+  const [value2, setvalue2] = useState('');  
+  const [value3, setvalue3] = useState('');
+  const [value4, setvalue4] = useState('');
+  const [value5, setvalue5] = useState('');
+  const [value6, setvalue6] = useState('');
 
 
-  console.log(value);
+  useEffect(( ) => { 
 
-  useEffect( () => {
-     getData()
-  }, [])
+    AsyncStorage.getItem('firstName')
+ .then((value)=>{
+     setvalue(value);
+      });
+      AsyncStorage.getItem('lastName')
+      .then((value1)=>{
+         setvalue1(value1);
+          });
+ 
+          AsyncStorage.getItem('phone')
+          .then((value2)=>{
+             setvalue2(value2);
+         
+         
+              });
+
+              AsyncStorage.getItem('email')
+              .then((value3)=>{
+                setvalue3(value3);
+            
+            
+                 });
+
+                 AsyncStorage.getItem('Montant')
+                 .then((value4)=>{
+                     setvalue4(value4);
+                      });
+
+                      AsyncStorage.getItem('DureeParMois')
+                      .then((value5)=>{
+                         setvalue5(value5);
+                          });
+                          AsyncStorage.getItem('mensualite')
+                          .then((value6)=>{
+                             setvalue6(value6);
+                         
+                         
+                              });
+
+
+ 
+     },[]);
+
+     function AddDATA(){
+  db.collection("Reservation").add({
+        firstName:value ,
+        lastName:value1 ,
+        phone: value2,
+        email:value3,
+        Montant:value4,
+        DureeParMois:value5,
+        mensualite:value6,
+
+
+      });
+     }
+
+
+
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.row}>
@@ -102,31 +143,34 @@ function SignUpScreen(props) {
       <TextInput
         style={styles.input}
         placeholder={"Nom ..."}
-        onChangeText={onChangefirstName}
-        value={value.firstName}
+        value={value}
+        onChangeText={ value => {setvalue(value) }}
       />
       <TextInput
         style={styles.input}
         placeholder={"Prénom ..."}
-        onChangeText={onChangelastName}
-        value={value.lastName}
+        value={value1}
+        onChangeText={ value1 => {setvalue1(value1) }}
+
       />
       <TextInput
         style={styles.input}
         placeholder={"Tél ..."}
-        onChangeText={onChangePhone}
-        value={value.phone}
+        value={value2}
+        onChangeText={ value2 => {setvalue2(value2) }}
+
       />
       <TextInput
         style={styles.input}
         placeholder={"Email..."}
-        onChangeText={onChangeEmail}
-        value={value.email}
+        value={value3}
+        onChangeText={ value3 => {setvalue3(value3) }}
+
       />
       <ButtonShared
         text="ALONS-Y!"
         onPress={() => {
-          signUp();
+          AddDATA();
         }}
       />
     </ScrollView>
